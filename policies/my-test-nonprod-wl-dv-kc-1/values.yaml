@@ -1,5 +1,6 @@
 clusterName: "my-test-nonprod-wl-dv-kc-1"
 environment: "nonprod"
+revision: "staging"
 
 kyvernoPolicies:
   enabled: true
@@ -24,4 +25,5 @@ kyvernoPolicies:
       - "observability"
       - "promtail"
       - "kyverno"
+
 
