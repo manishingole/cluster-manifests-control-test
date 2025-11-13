@@ -16,28 +16,28 @@ spec:
   
   template:
     metadata:
-      name: '{{path.basename}}-kyverno-policies'
+      name: '{{`{{path.basename}}`}}-kyverno-policies'
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
-        target-cluster: '{{path.basename}}'
-        policy-path: '{{path.path}}'
+        target-cluster: '{{`{{path.basename}}`}}'
+        policy-path: '{{`{{path.path}}`}}'
     spec:
       project: {{ .Values.argoProjectPlatform }}
       source:
         repoURL: {{ .Values.spec.source.repoURL }}
         targetRevision: {{ .Values.spec.source.targetRevision }}
-        path: '{{path.path}}'
+        path: '{{`{{path.path}}`}}'
         helm:
           parameters:
           - name: "clusterName"
-            value: '{{path.basename}}'
+            value: '{{`{{path.basename}}`}}'
           - name: "validationFailureAction"
             value: "audit"
           - name: "environment"
-            value: '{{if or (contains "prod" path.basename) (contains "production" path.basename)}}prod{{else}}nonprod{{end}}'
+            value: '{{`{{if or (contains "prod" path.basename) (contains "production" path.basename)}}prod{{else}}nonprod{{end}}`}}'
           - name: "revision"
-            value: '{{if or (contains "prod" path.basename) (contains "production" path.basename)}}main{{else}}staging{{end}}'
+            value: '{{`{{if or (contains "prod" path.basename) (contains "production" path.basename)}}main{{else}}staging{{end}}`}}'
       destination:
         server: https://kubernetes.default.svc
         namespace: kyverno
