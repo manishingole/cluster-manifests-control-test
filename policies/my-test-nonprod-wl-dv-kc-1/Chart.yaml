@@ -1,0 +1,4 @@
+apiVersion: v2
+name: my-test-nonprod-wl-dv-kc-1-policies
+description: Kyverno policies for my-test-nonprod-wl-dv-kc-1 cluster
+version: 0.1.0

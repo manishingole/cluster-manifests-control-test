@@ -1,0 +1,4 @@
+apiVersion: v2
+name: baseline-control
+description: Baseline control applications including Kyverno policies
+version: 0.1.0

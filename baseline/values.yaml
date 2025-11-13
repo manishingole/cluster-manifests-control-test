@@ -1,0 +1,12 @@
+argoNamespace: 'argocd'
+argoProjectPlatform: 'default'
+
+spec:
+  source:
+    repoURL: https://github.com/manishingole/cluster-manifests-control-test.git
+    targetRevision: HEAD
+
+kyvernoPolicies:
+  enabled: true
+  validationFailureAction: "audit"
+  background: true
