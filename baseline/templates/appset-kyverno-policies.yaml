@@ -21,7 +21,9 @@ spec:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
         target-cluster: {{ `'{{path.basename}}'` }}
-        policy-path: {{ `'{{path.path}}'` }}
+        policy-path: {{ `'{{path.basename}}'` }}  # Changed from {{path.path}} to {{path.basename}}
+      annotations:
+        policy-source-path: {{ `'{{path.path}}'` }}  # Move full path to annotation instead
     spec:
       project: {{ .Values.argoProjectPlatform }}
       source:
