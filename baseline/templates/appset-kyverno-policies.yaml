@@ -20,7 +20,6 @@ spec:
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
-    
     spec:
       project: {{ .Values.argoProjectPlatform }}
       source:
@@ -31,12 +30,6 @@ spec:
           parameters:
           - name: "clusterName"
             value: '{{`{{path.basename}}`}}'
-          - name: "validationFailureAction"
-            value: "audit"
-          - name: "environment"
-            value: '{{`{{contains "prod" path.basename | ternary "prod" "nonprod"}}`}}'
-          - name: "revision"
-            value: '{{`{{contains "prod" path.basename | ternary "main" "staging"}}`}}'
       destination:
         server: https://kubernetes.default.svc
         namespace: kyverno
