@@ -6,7 +6,6 @@ metadata:
   annotations:
     policies.kyverno.io/title: "{{ .Values.clusterName }} Node Scheduling Requirements"
     policies.kyverno.io/category: "Scheduling"
-    policies.kyverno.io/severity: {{ .Values.nodeSchedulingPolicy.severity | default "medium" }}
     policies.kyverno.io/environment: {{ .Values.environment }}
     policies.kyverno.io/revision: {{ .Values.revision }}
     policies.kyverno.io/subject: "Pod,Deployment,StatefulSet,ReplicaSet"
@@ -52,4 +51,5 @@ spec:
               spec:
                 tolerations:
                 - key: "?*"
+
 {{- end }}
