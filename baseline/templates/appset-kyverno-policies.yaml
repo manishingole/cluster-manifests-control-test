@@ -20,8 +20,6 @@ spec:
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
-        target-cluster: '{{`{{path.basename}}`}}'
-        policy-path: '{{`{{path.path}}`}}'
     spec:
       project: {{ .Values.argoProjectPlatform }}
       source:
@@ -48,3 +46,4 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
