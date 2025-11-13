@@ -1,0 +1,27 @@
+clusterName: "my-test-nonprod-wl-dv-kc-1"
+environment: "nonprod"
+
+kyvernoPolicies:
+  enabled: true
+  validationFailureAction: "audit"
+  background: true
+  
+  workloadNamespaceSelector:
+    matchExpressions:
+    - key: "argocd.argoproj.io/instance"
+      operator: "Exists"
+    - key: "kubernetes.io/metadata.name"
+      operator: "NotIn"
+      values:
+      - "kube-system"
+      - "kube-public"
+      - "kube-node-lease"
+      - "argocd"
+      - "default"
+      - "cert-manager"
+      - "external-dns"
+      - "external-secrets"
+      - "observability"
+      - "promtail"
+      - "kyverno"
+

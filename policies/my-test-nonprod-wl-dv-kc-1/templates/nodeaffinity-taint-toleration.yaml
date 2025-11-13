@@ -1,0 +1,55 @@
+{{- if and .Values.kyvernoPolicies.enabled .Values.nodeSchedulingPolicy.enabled }}
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: {{ .Values.clusterName }}-node-scheduling-requirements
+  annotations:
+    policies.kyverno.io/title: "{{ .Values.clusterName }} Node Scheduling Requirements"
+    policies.kyverno.io/category: "Scheduling"
+    policies.kyverno.io/severity: {{ .Values.nodeSchedulingPolicy.severity | default "medium" }}
+    policies.kyverno.io/environment: {{ .Values.environment }}
+    policies.kyverno.io/revision: {{ .Values.revision }}
+    policies.kyverno.io/subject: "Pod,Deployment,StatefulSet,ReplicaSet"
+    policies.kyverno.io/description: >-
+      Ensures workloads have proper node affinity and taint tolerations for {{ .Values.clusterName }}.
+      Environment: {{ .Values.environment }}
+      Mode: {{ .Values.validationFailureAction | upper }}
+spec:
+  background: true
+  validationFailureAction: {{ .Values.kyvernoPolicies.validationFailureAction | quote }}
+  rules:
+    - name: require-node-affinity-deployments
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+              namespaceSelector:
+                {{- toYaml .Values.kyvernoPolicies.workloadNamespaceSelector | nindent 16 }}
+      validate:
+        message: "Deployment must have nodeAffinity defined in pod template."
+        pattern:
+          spec:
+            template:
+              spec:
+                affinity:
+                  nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution: "?*"
+
+    - name: require-tolerations-deployments
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+              namespaceSelector:
+                {{- toYaml .Values.kyvernoPolicies.workloadNamespaceSelector | nindent 16 }}
+      validate:
+        message: "Deployment must have tolerations defined in pod template."
+        pattern:
+          spec:
+            template:
+              spec:
+                tolerations:
+                - key: "?*"
+{{- end }}
