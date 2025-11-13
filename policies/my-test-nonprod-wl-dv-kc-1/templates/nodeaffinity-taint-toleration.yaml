@@ -12,7 +12,7 @@ metadata:
     policies.kyverno.io/description: >-
       Ensures workloads have proper node affinity and taint tolerations for {{ .Values.clusterName }}.
       Environment: {{ .Values.environment }}
-      Mode: {{ .Values.validationFailureAction | upper }}
+      Mode: {{ .Values.kyvernoPolicies.validationFailureAction | upper }}
 spec:
   background: true
   validationFailureAction: {{ .Values.kyvernoPolicies.validationFailureAction | quote }}
@@ -53,4 +53,5 @@ spec:
                 - key: "?*"
 
 {{- end }}
+
 
