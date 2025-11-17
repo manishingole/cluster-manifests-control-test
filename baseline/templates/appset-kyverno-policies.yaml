@@ -17,8 +17,8 @@ spec:
   - clusters:
       selector:
         matchLabels:
-          aspname: "{{ index (splitList \"-\" .path.basename) 1 }}"
-          environment: "{{ index (splitList \"-\" .path.basename) 2 }}"
+          aspname: '{{ index (splitList "-" .path.basename) 1 }}'
+          environment: '{{ index (splitList "-" .path.basename) 2 }}'
 
 
   template:
@@ -45,3 +45,4 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
