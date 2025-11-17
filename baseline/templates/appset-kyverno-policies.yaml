@@ -5,19 +5,18 @@ metadata:
   name: appset-kyverno-policies
   namespace: {{ .Values.argoNamespace }}
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  - resources-finalizer.argocd.argoproj.io
 spec:
   generators:
-    - git:
-        repoURL: {{ .Values.spec.source.repoURL }}
-        revision: {{ .Values.spec.source.targetRevision }}
-        directories:
-        - path: 'policies/*'
-
-  # Template section – Helm evaluates this, must escape ApplicationSet variables
+  - git:
+      repoURL: {{ .Values.spec.source.repoURL }}
+      revision: {{ .Values.spec.source.targetRevision }}
+      directories:
+      - path: "policies/*"
+  
   template:
     metadata:
-      name: '{{.path.basename}}-kyverno-policies'
+      name: '{{`{{path.basename}}`}}-kyverno-policies'
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
@@ -26,17 +25,18 @@ spec:
       source:
         repoURL: {{ .Values.spec.source.repoURL }}
         targetRevision: {{ .Values.spec.source.targetRevision }}
-        path: '{{.path.path}}'
+        path: '{{`{{path}}`}}'
         helm:
-          releaseName: '{{.name}}-kyverno'
+          parameters:
+          - name: "clusterName"
+            value: '{{`{{path.basename}}`}}'
       destination:
-        server: '{{.server}}'
+        server: https://kubernetes.default.svc
         namespace: kyverno
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
         syncOptions:
-          - ServerSideApply=true
+        - ServerSideApply=true
 {{- end }}
-
