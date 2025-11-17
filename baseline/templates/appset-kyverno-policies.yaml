@@ -39,7 +39,7 @@ spec:
   # ──────────────────────────────────────────────
   template:
     metadata:
-      name: {{'"{{ path.basename }}'"}}-{{'"{{ name }}'"}}-kyverno-policies
+      name: {{"'{{ path.basename }}'"}}-{{"'{{ name }}'"}}-kyverno-policies
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
