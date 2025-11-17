@@ -30,7 +30,7 @@ spec:
         helm:
           parameters:
           - name: "clusterName"
-            value: '{{`{{path.basename}}`}}'
+            value: '{{`{{name}}`}}'
       destination:
         server: '{{`{{server}}`}}'
         namespace: kyverno
@@ -41,6 +41,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
 
