@@ -7,20 +7,17 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  goTemplate: true
-  goTemplateOptions: ["missingkey=error"]
-        generators:
-          # 1. Git Generator – ArgoCD evaluates this
-          - git:
-              repoURL: {{ .Values.spec.source.repoURL }}
-              revision: {{ .Values.spec.source.targetRevision }}
-              directories:
-                - path: "policies/*"
+  generators:
+    - git:
+        repoURL: {{ .Values.spec.source.repoURL }}
+        revision: {{ .Values.spec.source.targetRevision }}
+        directories:
+        - path: 'policies/*'
 
   # Template section – Helm evaluates this, must escape ApplicationSet variables
   template:
     metadata:
-      name: '{{.name}}-kyverno-policies'
+      name: '{{.path.basename}}-kyverno-policies'
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
@@ -29,7 +26,7 @@ spec:
       source:
         repoURL: {{ .Values.spec.source.repoURL }}
         targetRevision: {{ .Values.spec.source.targetRevision }}
-        path: '{{.path}}'
+        path: '{{.path.path}}'
         helm:
           releaseName: '{{.name}}-kyverno'
       destination:
@@ -42,6 +39,7 @@ spec:
         syncOptions:
           - ServerSideApply=true
 {{- end }}
+
 
 
 
