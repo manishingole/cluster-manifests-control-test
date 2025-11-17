@@ -7,6 +7,8 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
   generators:
     - matrix:
         generators:
@@ -16,22 +18,17 @@ spec:
               revision: {{ .Values.spec.source.targetRevision }}
               directories:
                 - path: "policies/*"
-                  parameters:
-                    # Extract aspname and environment from folder basename
-                    aspname: '{{ index (splitList "-" .basename) 1 }}'
-                    environment: '{{ index (splitList "-" .basename) 2 }}'
-
           # 2. Cluster Generator – must escape ApplicationSet variables for Helm
           - clusters:
               selector:
                 matchLabels:
-                  aspname: "{{ '{{ parameters.aspname }}' }}"
-                  environment: "{{ '{{ parameters.environment }}' }}"
+                  aspname: '{{ index (split "-" (index .path.segments 1)) 1 }}'
+                  environment: '{{ index (split "-" (index .path.segments 1)) 2 }}'
 
   # Template section – Helm evaluates this, must escape ApplicationSet variables
   template:
     metadata:
-      name: "{{ '{{ parameters.aspname }}' }}-kyverno-policies"
+      name: '{{.name}}-kyverno-policies'
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
@@ -40,11 +37,11 @@ spec:
       source:
         repoURL: {{ .Values.spec.source.repoURL }}
         targetRevision: {{ .Values.spec.source.targetRevision }}
-        path: "{{ '{{ path }}' }}"
+        path: '{{.path.path}}'
         helm:
-          releaseName: "{{ '{{ parameters.aspname }}' }}-kyverno"
+          releaseName: '{{.name}}-kyverno'
       destination:
-        server: "{{ '{{ server }}' }}"
+        server: '{{.server}}'
         namespace: kyverno
       syncPolicy:
         automated:
