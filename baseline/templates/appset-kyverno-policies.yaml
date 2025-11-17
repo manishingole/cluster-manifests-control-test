@@ -8,18 +8,20 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   generators:
-  - git:
-      repoURL: {{ .Values.spec.source.repoURL }}
-      revision: {{ .Values.spec.source.targetRevision }}
-      directories:
-      - path: "policies/*"
-
-    clusters:
-      selector:
-        matchLabels:
-          aspname: '{{ index (splitList "-" .path.basename) 1 }}'
-          environment: '{{ index (splitList "-" .path.basename) 2 }}'
-
+  - merge:
+      mergeKeys:
+      - server
+      generators:
+      - git:
+          repoURL: {{ .Values.spec.source.repoURL }}
+          revision: {{ .Values.spec.source.targetRevision }}
+          directories:
+          - path: "policies/*"
+      - clusters:
+          selector:
+            matchLabels:
+              aspname: '{{ index (splitList "-" .path.basename) 1 }}'
+              environment: '{{ index (splitList "-" .path.basename) 2 }}'
 
   template:
     metadata:
@@ -32,11 +34,11 @@ spec:
       source:
         repoURL: {{ .Values.spec.source.repoURL }}
         targetRevision: {{ .Values.spec.source.targetRevision }}
-        path: {{`{{path}}`}}'
+        path: {{`{{path}}`}}
         helm:
           releaseName: '{{`{{path.basename}}`}}-kyverno'
       destination:
-        name: {{"'{{server}}'"}}
+        name: '{{`{{server}}`}}'
         namespace: kyverno
       syncPolicy:
         automated:
@@ -45,5 +47,3 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
-
-
