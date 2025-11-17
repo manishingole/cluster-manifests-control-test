@@ -13,7 +13,14 @@ spec:
       revision: {{ .Values.spec.source.targetRevision }}
       directories:
       - path: "policies/*"
-  
+
+  - clusters:
+      selector:
+        matchLabels:
+          aspname: "{{ index (splitList \"-\" .path.basename) 1 }}"
+          environment: "{{ index (splitList \"-\" .path.basename) 2 }}"
+
+
   template:
     metadata:
       name: '{{`{{path.basename}}`}}-kyverno-policies'
@@ -25,13 +32,11 @@ spec:
       source:
         repoURL: {{ .Values.spec.source.repoURL }}
         targetRevision: {{ .Values.spec.source.targetRevision }}
-        path: '{{`{{path}}`}}'
+        path: {{`{{path}}`}}'
         helm:
-          parameters:
-          - name: "clusterName"
-            value: '{{`{{path.basename}}`}}'
+          releaseName: '{{`{{path.basename}}`}}-kyverno'
       destination:
-        server: https://kubernetes.default.svc
+        name: {{"'{{server}}'"}}
         namespace: kyverno
       syncPolicy:
         automated:
