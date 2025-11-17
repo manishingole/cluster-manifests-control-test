@@ -20,8 +20,8 @@ spec:
           directories:
           - path: "policies/*"
             parameters:
-              aspname: '{{ index (splitList "-" .basename) 1 }}'
-              environment: '{{ index (splitList "-" .basename) 2 }}'
+              aspname: '{{ index (splitList "-" (printf "%s" .basename)) 1 }}'
+              environment: '{{ index (splitList "-" (printf "%s" .basename)) 2 }}'
 
       # ────────────────────────────────────────────
       # 2. Cluster Generator – Helm DOES evaluate this
@@ -61,6 +61,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
 
