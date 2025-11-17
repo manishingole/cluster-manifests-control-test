@@ -31,7 +31,7 @@ spec:
           - name: "clusterName"
             value: '{{`{{path.basename}}`}}'
       destination:
-        server: '{{`{{.server}}`}}'
+        server: '{{{`{cluster.address}}`}}'
         namespace: kyverno
       syncPolicy:
         automated:
@@ -40,5 +40,6 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
