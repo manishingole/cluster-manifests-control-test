@@ -14,7 +14,7 @@ spec:
       directories:
       - path: "policies/*"
 
-  - clusters:
+    clusters:
       selector:
         matchLabels:
           aspname: '{{ index (splitList "-" .path.basename) 1 }}'
@@ -45,4 +45,5 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
