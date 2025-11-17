@@ -48,11 +48,11 @@ spec:
       source:
         repoURL: {{ .Values.spec.source.repoURL }}
         targetRevision: {{ .Values.spec.source.targetRevision }}
-        path: {{`{{ path }}`}}
+        path: {{"'{{ path }}'"}}
         helm:
-          releaseName: {{'"{{ path.basename }}'"}}-kyverno
+          releaseName: {{"'{{ path.basename }}'"}}-kyverno
       destination:
-        server: {{'"{{ server }}'"}}
+        server: {{"'{{ server }}'"}}
         namespace: kyverno
       syncPolicy:
         automated:
@@ -61,4 +61,5 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
