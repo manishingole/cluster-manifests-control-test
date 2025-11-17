@@ -5,41 +5,31 @@ metadata:
   name: appset-kyverno-policies
   namespace: {{ .Values.argoNamespace }}
   finalizers:
-  - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io
 spec:
   generators:
-  - matrix:
-      generators:
-      # ────────────────────────────────────────────
-      # 1. Git Generator – ArgoCD evaluates this part
-      #    NO HELM EVALUATION here → No escaping
-      # ────────────────────────────────────────────
-      - git:
-          repoURL: {{ .Values.spec.source.repoURL }}
-          revision: {{ .Values.spec.source.targetRevision }}
-          directories:
-          - path: "policies/*"
-            parameters:
-              aspname: '{{ index (splitList "-" (printf "%s" .basename)) 1 }}'
-              environment: '{{ index (splitList "-" (printf "%s" .basename)) 2 }}'
+    - matrix:
+        generators:
+          # 1. Git Generator – ArgoCD evaluates this part
+          - git:
+              repoURL: {{ .Values.spec.source.repoURL }}
+              revision: {{ .Values.spec.source.targetRevision }}
+              directories:
+                - path: "policies/*"
+                  parameters:
+                    aspname: '{{ index (splitList "-" .basename) 1 }}'
+                    environment: '{{ index (splitList "-" .basename) 2 }}'
 
-      # ────────────────────────────────────────────
-      # 2. Cluster Generator – Helm DOES evaluate this
-      #    MUST ESCAPE ApplicationSet handlebars
-      # ────────────────────────────────────────────
-      - clusters:
-          selector:
-            matchLabels:
-              aspname: {{"'{{ parameters.aspname }}'"}}
-              environment: {{"'{{ parameters.environment }}'"}}
+          # 2. Cluster Generator – use escaped variables for Helm
+          - clusters:
+              selector:
+                matchLabels:
+                  aspname: "{{ parameters.aspname }}"
+                  environment: "{{ parameters.environment }}"
 
-  # ──────────────────────────────────────────────
-  # Template section – Helm evaluates this
-  # MUST ESCAPE all ApplicationSet variables
-  # ──────────────────────────────────────────────
   template:
     metadata:
-      name: {{"'{{ parameters.aspname }}'"}}-kyverno-policies
+      name: "{{ parameters.aspname }}-kyverno-policies"
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
@@ -48,21 +38,16 @@ spec:
       source:
         repoURL: {{ .Values.spec.source.repoURL }}
         targetRevision: {{ .Values.spec.source.targetRevision }}
-        path: {{"'{{ path }}'"}}
+        path: "{{ path }}"
         helm:
-          releaseName: {{"'{{ parameters.aspname }}'"}}-kyverno
+          releaseName: "{{ parameters.aspname }}-kyverno"
       destination:
-        server: {{"'{{ server }}'"}}
+        server: "{{ server }}"
         namespace: kyverno
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
         syncOptions:
-        - ServerSideApply=true
+          - ServerSideApply=true
 {{- end }}
-
-
-
-
-
