@@ -16,17 +16,17 @@ spec:
           directories:
           - path: "policies/*"
             parameters:
-              aspname: '{{ index (splitList "-" .path.basename) 1 }}'
-              environment: '{{ index (splitList "-" .path.basename) 2 }}'
+              aspname: "{{ index (splitList \"-\" .path.basename) 1 }}"
+              environment: "{{ index (splitList \"-\" .path.basename) 2 }}"
       - clusters:
           selector:
             matchLabels:
-              aspname: "{{ parameters.aspname }}"
-              environment: "{{ parameters.environment }}"
+              aspname: '{{ `{{ parameters.aspname }}` }}'
+              environment: '{{ `{{ parameters.environment }}` }}'
 
   template:
     metadata:
-      name: "{{ path.basename }}-{{ name }}-kyverno-policies"
+      name: '{{ `{{ path.basename }}` }}-{{ `{{ name }}` }}-kyverno-policies'
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
@@ -35,11 +35,11 @@ spec:
       source:
         repoURL: {{ .Values.spec.source.repoURL }}
         targetRevision: {{ .Values.spec.source.targetRevision }}
-        path: "{{ path }}"
+        path: '{{ `{{ path }}` }}'
         helm:
-          releaseName: "{{ path.basename }}-kyverno"
+          releaseName: '{{ `{{ path.basename }}` }}-kyverno'
       destination:
-        server: "{{ server }}"
+        server: '{{ `{{ server }}` }}'
         namespace: kyverno
       syncPolicy:
         automated:
