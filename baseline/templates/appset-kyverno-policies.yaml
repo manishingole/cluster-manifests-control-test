@@ -20,8 +20,8 @@ spec:
           directories:
           - path: "policies/*"
             parameters:
-              aspname: '{{ index (splitList "-" .path.basename) 1 }}'
-              environment: '{{ index (splitList "-" .path.basename) 2 }}'
+              aspname: '{{ index (splitList "-" .basename) 1 }}'
+              environment: '{{ index (splitList "-" .basename) 2 }}'
 
       # ────────────────────────────────────────────
       # 2. Cluster Generator – Helm DOES evaluate this
@@ -39,7 +39,7 @@ spec:
   # ──────────────────────────────────────────────
   template:
     metadata:
-      name: {{"'{{ path.basename }}'"}}-{{"'{{ name }}'"}}-kyverno-policies
+      name: {{"'{{ parameters.aspname }}'"}}-kyverno-policies
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
@@ -50,7 +50,7 @@ spec:
         targetRevision: {{ .Values.spec.source.targetRevision }}
         path: {{"'{{ path }}'"}}
         helm:
-          releaseName: {{"'{{ path.basename }}'"}}-kyverno
+          releaseName: {{"'{{ parameters.aspname }}'"}}-kyverno
       destination:
         server: {{"'{{ server }}'"}}
         namespace: kyverno
@@ -61,6 +61,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
 
