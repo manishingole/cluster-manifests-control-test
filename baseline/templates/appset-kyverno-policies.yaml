@@ -22,8 +22,8 @@ spec:
           - clusters:
               selector:
                 matchLabels:
-                  aspname: "{{ index (split \"-\" (index .path.segments 1)) 1 }}"
-                  environment: "{{ index (split \"-\" (index .path.segments 1)) 2 }}"
+                  aspname: "{{ index (split "-" (index .path.segments 1)) 1 }}"
+                  environment: "{{ index (split "-" (index .path.segments 1)) 2 }}"
 
   # Template section – Helm evaluates this, must escape ApplicationSet variables
   template:
@@ -50,6 +50,7 @@ spec:
         syncOptions:
           - ServerSideApply=true
 {{- end }}
+
 
 
 
