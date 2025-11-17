@@ -16,8 +16,8 @@ spec:
           directories:
           - path: "policies/*"
             parameters:
-              aspname: "{{ index (splitList \"-\" .path.basename) 1 }}"
-              environment: "{{ index (splitList \"-\" .path.basename) 2 }}"
+              aspname: '{{ index (splitList "-" .path.basename) 1 }}'
+              environment: '{{ index (splitList "-" .path.basename) 2 }}'
       - clusters:
           selector:
             matchLabels:
