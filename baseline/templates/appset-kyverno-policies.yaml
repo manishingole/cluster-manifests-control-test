@@ -31,7 +31,7 @@ spec:
           selector:
             matchLabels:
               aspname: {{"'{{ parameters.aspname }}'"}}
-              environment: {{'"{{ parameters.environment }}'"}}
+              environment: {{"'{{ parameters.environment }}'"}}
 
   # ──────────────────────────────────────────────
   # Template section – Helm evaluates this
@@ -61,5 +61,6 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
