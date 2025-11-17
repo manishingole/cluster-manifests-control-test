@@ -8,6 +8,7 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   generators:
+  - clusters: {}
   - git:
       repoURL: {{ .Values.spec.source.repoURL }}
       revision: {{ .Values.spec.source.targetRevision }}
@@ -31,7 +32,7 @@ spec:
           - name: "clusterName"
             value: '{{`{{path.basename}}`}}
       destination:
-        server: '{{`{{cluster.address}}`}}'
+        server: '{{`{{server}}`}}'
         namespace: kyverno
       syncPolicy:
         automated:
@@ -40,6 +41,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
 
