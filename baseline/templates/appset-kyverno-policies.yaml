@@ -9,15 +9,13 @@ metadata:
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
-  generators:
-    - matrix:
         generators:
           # 1. Git Generator – ArgoCD evaluates this
           - git:
               repoURL: {{ .Values.spec.source.repoURL }}
               revision: {{ .Values.spec.source.targetRevision }}
               directories:
-                - path: policies/*
+                - path: "policies/*"
 
   # Template section – Helm evaluates this, must escape ApplicationSet variables
   template:
@@ -44,6 +42,7 @@ spec:
         syncOptions:
           - ServerSideApply=true
 {{- end }}
+
 
 
 
