@@ -21,8 +21,8 @@ spec:
       - clusters:
           selector:
             matchLabels:
-              aspname: "{{ parameters.aspname }}"
-              environment: "{{ parameters.environment }}"
+              aspname: '{{ `{{ parameters.aspname }}` }}'
+              environment: '{{ `{{ parameters.environment }}` }}'
 
   template:
     metadata:
@@ -48,4 +48,5 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
