@@ -13,7 +13,6 @@ spec:
       revision: {{ .Values.spec.source.targetRevision }}
       directories:
       - path: "policies/*"
-
     clusters:
       selector:
         matchLabels:
@@ -44,5 +43,6 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
