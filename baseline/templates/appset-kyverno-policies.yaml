@@ -29,7 +29,7 @@ spec:
       source:
         repoURL: {{ .Values.spec.source.repoURL }}
         targetRevision: {{ .Values.spec.source.targetRevision }}
-        path: '{{.path.path}}'
+        path: '{{.path}}'
         helm:
           releaseName: '{{.name}}-kyverno'
       destination:
@@ -42,6 +42,7 @@ spec:
         syncOptions:
           - ServerSideApply=true
 {{- end }}
+
 
 
 
