@@ -8,23 +8,22 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   generators:
-  - git:
-      repoURL: {{ .Values.spec.source.repoURL }}
-      revision: {{ .Values.spec.source.targetRevision }}
-      directories:
-      - path: "policies/*"
-      values:
-        aspname: '{{`{{ index (splitList "-" .path.basename) 1 }}`}}'
-        environment: '{{`{{ index (splitList "-" .path.basename) 2 }}`}}'
-  - clusters:
-      selector:
-        matchLabels:
-          aspname: '{{`{{values.aspname}}`}}'
-          environment: '{{`{{values.environment}}`}}'
+  - matrix:
+      generators:
+      - git:
+          repoURL: {{ .Values.spec.source.repoURL }}
+          revision: {{ .Values.spec.source.targetRevision }}
+          directories:
+          - path: "policies/*"
+      - clusters:
+          selector:
+            matchLabels:
+              aspname: '{{`{{ index (splitList "-" .path.basename) 1 }}`}}'
+              environment: '{{`{{ index (splitList "-" .path.basename) 2 }}`}}'
 
   template:
     metadata:
-      name: '{{`{{path.basename}}`}}-kyverno-policies'
+      name: '{{`{{path.basename}}`}}-{{`{{name}}`}}-kyverno-policies'
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
@@ -37,7 +36,7 @@ spec:
         helm:
           releaseName: '{{`{{path.basename}}`}}-kyverno'
       destination:
-        name: '{{`{{server}}`}}'
+        server: '{{`{{server}}`}}'
         namespace: kyverno
       syncPolicy:
         automated:
