@@ -8,20 +8,19 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   generators:
-  - merge:
-      mergeKeys:
-      - server
-      generators:
-      - git:
-          repoURL: {{ .Values.spec.source.repoURL }}
-          revision: {{ .Values.spec.source.targetRevision }}
-          directories:
-          - path: "policies/*"
-      - clusters:
-          selector:
-            matchLabels:
-              aspname: '{{ index (splitList "-" .path.basename) 1 }}'
-              environment: '{{ index (splitList "-" .path.basename) 2 }}'
+  - git:
+      repoURL: {{ .Values.spec.source.repoURL }}
+      revision: {{ .Values.spec.source.targetRevision }}
+      directories:
+      - path: "policies/*"
+      values:
+        aspname: '{{ index (splitList "-" .path.basename) 1 }}'
+        environment: '{{ index (splitList "-" .path.basename) 2 }}'
+  - clusters:
+      selector:
+        matchLabels:
+          aspname: '{{`{{values.aspname}}`}}'
+          environment: '{{`{{values.environment}}`}}'
 
   template:
     metadata:
