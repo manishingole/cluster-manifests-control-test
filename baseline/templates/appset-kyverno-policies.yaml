@@ -8,7 +8,6 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   generators:
-  - clusters: {}
   - git:
       repoURL: {{ .Values.spec.source.repoURL }}
       revision: {{ .Values.spec.source.targetRevision }}
@@ -17,7 +16,7 @@ spec:
   
   template:
     metadata:
-      name: '{{`{{name}}`}}-{{`{{path.basename}}`}}-kyverno-policies'
+      name: '{{`{{path.basename}}`}}-kyverno-policies'
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
@@ -30,9 +29,9 @@ spec:
         helm:
           parameters:
           - name: "clusterName"
-            value: '{{`{{name}}`}}'
-      destination:
-        server: '{{`{{server}}`}}'
+            value: '{{`{{path.basename}}`}}'
+      destination: 
+        server: '{{`{{path.basename}}`}}'
         namespace: kyverno
       syncPolicy:
         automated:
@@ -41,6 +40,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
 
