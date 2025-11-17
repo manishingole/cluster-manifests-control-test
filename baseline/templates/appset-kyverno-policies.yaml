@@ -21,7 +21,7 @@ spec:
   
   template:
     metadata:
-      name: '{{`{{nameNormalized}}`}}-{{`{{path.basename}}`}}-kyverno-policies'
+      name: '{{`{{nameNormalized}}`}}-kyverno-policies'
       labels:
         app.kubernetes.io/name: kyverno-policies
         app.kubernetes.io/component: security
@@ -45,6 +45,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
 
