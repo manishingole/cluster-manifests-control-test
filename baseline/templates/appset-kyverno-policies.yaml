@@ -13,8 +13,8 @@ spec:
         - clusters:
             selector:
               matchLabels:
-                aspname: '{{`{{ index (split "-" path.basename) 1 }}`}}'
-                environment: '{{`{{ index (split "-" path.basename) 2 }}`}}'
+                aspname: '{{`{{ index (split "-" name) 1 }}`}}'
+                environment: '{{`{{ index (split "-" name) 2 }}`}}'
         - git:
             repoURL: {{ .Values.spec.source.repoURL }}
             revision: {{ .Values.spec.source.targetRevision }}
@@ -47,6 +47,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
 
