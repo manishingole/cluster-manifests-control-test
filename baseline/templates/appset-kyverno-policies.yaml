@@ -8,16 +8,18 @@ metadata:
   - resources-finalizer.argocd.argoproj.io
 spec:
   generators:
-  - clusters:
-      selector:
-        matchLabels:
-          argocd.argoproj.io/secret-type: cluster
-          environment: "nonprod"
-  - git:
-      repoURL: {{ .Values.spec.source.repoURL }}
-      revision: {{ .Values.spec.source.targetRevision }}
-      directories:
-      - path: "policies/*"
+  - matrix:  
+      generators:
+        - clusters:
+            selector:
+              matchLabels:
+                aspname: "atlas"
+                environment: "nonprod"
+        - git:
+            repoURL: {{ .Values.spec.source.repoURL }}
+            revision: {{ .Values.spec.source.targetRevision }}
+            directories:
+            - path: "policies/*"
   
   template:
     metadata:
@@ -36,7 +38,7 @@ spec:
           - name: "clusterName"
             value: '{{`{{path.basename}}`}}'
       destination: 
-        server: '{{`{{server}}`}}'
+        server: '{{`{{name}}`}}'
         namespace: kyverno
       syncPolicy:
         automated:
@@ -45,6 +47,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
 
