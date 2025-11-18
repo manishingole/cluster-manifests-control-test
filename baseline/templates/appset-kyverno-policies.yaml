@@ -13,7 +13,7 @@ spec:
         - clusters:
             selector:
               matchLabels:
-                aspname: "atlas"
+                aspname: "test"
                 environment: "nonprod"
         - git:
             repoURL: {{ .Values.spec.source.repoURL }}
@@ -47,6 +47,7 @@ spec:
         syncOptions:
         - ServerSideApply=true
 {{- end }}
+
 
 
 
